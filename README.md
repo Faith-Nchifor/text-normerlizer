@@ -2,6 +2,8 @@
 
 Repo Contains:
 
-- The source Code
+- The source Code located in `/src`
 - The FAR file
 - The report
+
+To get Started, run:
