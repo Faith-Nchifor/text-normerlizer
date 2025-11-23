@@ -1,9 +1,9 @@
 '''
-Create FSTs for numbers from 0 - 1000 in English
+Create FSTs for numbers from 0 - 1000 in French
 '''
 import os
 import pynini
-from utils import I_O_FST, far_dir
+from utils import I_O_FST 
 
 units_map = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
@@ -161,7 +161,7 @@ def get_normilizer():
     fst_hundreds_compound,
     fst_hundreds_
     
-    ).optimize()
+).optimize()
 
     # save to far file
     far_path = os.path.join(far_dir,'en_fst.far')
