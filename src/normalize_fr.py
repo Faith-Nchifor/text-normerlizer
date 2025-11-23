@@ -3,42 +3,43 @@ Create FSTs for numbers from 0 - 1000 in French
 '''
 import os
 import pynini
-from utils import I_O_FST, far_dir # will use later
+from utils import I_O_FST, far_dir, apply_fst
 
 units_map = {
-    "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
-    "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine"
+    "0": "zéro", "1": "un", "2": "deux", "3": "trois", "4": "quatre",
+    "5": "cinq", "6": "six", "7": "sept", "8": "huit", "9": "neuf"
 }
 
 
 teens_map = {
-    "10": "ten", "11": "eleven", "12": "twelve", "13": "thirteen",
-    "14": "fourteen", "15": "fifteen", "16": "sixteen",
-    "17": "seventeen", "18": "eighteen", "19": "nineteen"
+    "10": "dix", "11": "onze", "12": "douze", "13": "treize",
+    "14": "quatorze", "15": "quinze", "16": "seize",
+    "17": "dix-sept", "18": "dix-huit", "19": "dix-neuf"
 }
 
 tens_digit_map = {
-    "2": "twenty",
-    "3": "thirty",
-    "4": "forty",
-    "5": "fifty",
-    "6": "sixty",
-    "7": "seventy",
-    "8": "eighty",
-    "9": "ninety"
+    "2": "vingt",
+    "3": "trente",
+    "4": "quarante",
+    "5": "cinquante",
+    "6": "soixante",
+    "7": "soixante-dix",
+    "8": "quatre-vingt",
+    "9": "quatre-vingt-dix"
 }
 
 hundreds = {
-    "100": "one hundred",
-    "200": "two hundred",
-    "300": "three hundred",
-    "400": "four hundred",
-    "500": "five hundred",
-    "600": "six hundred",
-    "700": "seven hundred",
-    "800": "eight hundred",
-    "900": "nine hundred"
+    "100": "cent",
+    "200": "deux cents",
+    "300": "trois cents",
+    "400": "quatre cents",
+    "500": "cinq cents",
+    "600": "six cents",
+    "700": "sept cents",
+    "800": "huit cents",
+    "900": "neuf cents"
 }
+
 
 # FST to insert a space: outputs " "
 fst_insert_space = I_O_FST("", " ") # <eps> -> " "
