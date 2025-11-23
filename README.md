@@ -1,4 +1,4 @@
-# Finite State Transducer Exercise
+# Finite State Transducer for numbers 0-1000
 
 Repo Contains:
 
@@ -6,4 +6,9 @@ Repo Contains:
 - The FAR file
 - The report
 
-To get Started, run:
+To get Started,
+
+- clone this repo. Navigate to the directory
+- create a virtual environment with conda: `conda create --name env`
+- activate environment: `conda activate env`
+- install pynini: `conda install conda-forge::pynini`
