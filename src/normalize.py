@@ -1,40 +1,16 @@
-import os
 import pynini
 from pynini.lib import pynutil, utf8
-
-# create a directory to store far files
-far_dir = 'data'
-os.makedirs(far_dir,exist_ok=True)
-
-far_path = os.path.join(far_dir,'en_fst.far')
-
-# This function creates an FST that transduces a single input string to a single output string.
-
-def I_O_FST(input_str: str, output_str: str):#, table: pynini.SymbolTable -> pynini.Fst:
-    """Creates an FST mapping input_str to output_str."""
-
-    # Ensure inputs are strings
-    input_str = str(input_str)
-    output_str = str(output_str)
-    #Create two FSAs one for the input the other for the output alphabet
-    input_accep = pynini.accep(input_str, token_type="utf8")
-    output_accep = pynini.accep(output_str,  token_type="utf8")
-
-    # Create the cross-product (input:output transducer), pynini.cross creates an FST from two FSAs
-    fst = pynini.cross(input_accep, output_accep)
-
-    return fst.optimize()
+# from normalize_en  import get_normilizer as normalize_en
+from utils import apply_fst, far_path
 
 
-# function normalizes text
-def apply_fst(text, fst):
-    '''finds the best FST for input'''
-    try:
-        return(pynini.shortestpath(pynini.accep(text,token_type='utf8') @ fst).string("utf8"))
+# retrieve stored fst
 
-    except Exception as e:
-        return(f"Error: {e}, for input:'{text}'")
-    
+
+archive = pynini.Far(far_path) 
+
+fsts = archive['en_fst']
+
 
 #  Some variables and functions used in generating the normalized text
 
@@ -115,11 +91,14 @@ def strip_tags_with_pynutil(tagged_text: str) -> str:
     return pynini.shortestpath(output_fst).string(token_type="utf8")
 
 
-def normalize_text(fst, text = "we started with the number 100 and ended up 823."):
+def normalize_text( text = "we started with the number 100 and ended up 823."):
 
-    normalized_with_tag = classify_sentence(text, fst)
+    normalized_with_tag = classify_sentence(text)
     normalized = strip_tags_with_pynutil(normalized_with_tag)
     print("text before normalization: ",text)
     # print("text normalized - but still taged: ", normalized_with_tag)
     print("text normalized: ", normalized)
+
+
+normalize_text()
 

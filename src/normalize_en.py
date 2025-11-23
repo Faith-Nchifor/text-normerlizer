@@ -1,9 +1,9 @@
 '''
 Create FSTs for numbers from 0 - 1000 in English
 '''
-
+import os
 import pynini
-from utils import I_O_FST 
+from utils import I_O_FST, far_dir
 
 units_map = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
@@ -149,8 +149,8 @@ fst_hundreds_ = generate_hundred_units_FSTS()
 
 
 def get_normilizer():
-
-    return pynini.union(
+   
+    fst = pynini.union(
     fst_units,           # Handles "0"-"9"
     fst_teens,           # Handles "10"-"19"
    fst_exact_tens,      # Handles "20", "30", "40"
@@ -161,7 +161,17 @@ def get_normilizer():
     fst_hundreds_compound,
     fst_hundreds_
     
-).optimize()
+    ).optimize()
+
+    # save to far file
+    far_path = os.path.join(far_dir,'en_fst.far')
+    far = pynini.Far(far_path,'w')
+    far.add('en_fst', fst)
+
+    print('done')
+
+if __name__ == "__main__":
+    get_normilizer()
 
 
 

@@ -3,7 +3,7 @@
 Repo Contains:
 
 - The source Code located in `/src`
-- The FAR file
+- The FAR file found in the `data` directory
 - The report
 
 To get Started,
@@ -12,4 +12,6 @@ To get Started,
 - create a virtual environment with conda: `conda create --name env`
 - activate environment: `conda activate env`
 - install pynini: `conda install conda-forge::pynini`
-- run `python src/main.py`
+
+- To generate the number FST, run `python src/main.py`
+- To use the generated FSTs, run `python src/normalize.py`s
