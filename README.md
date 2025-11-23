@@ -12,3 +12,4 @@ To get Started,
 - create a virtual environment with conda: `conda create --name env`
 - activate environment: `conda activate env`
 - install pynini: `conda install conda-forge::pynini`
+- run `python src/main.py`
