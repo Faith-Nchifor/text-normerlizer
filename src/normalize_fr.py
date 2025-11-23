@@ -42,7 +42,7 @@ hundreds = {
 
 import os
 import pynini
-from utils import I_O_FST, far_dir
+from utils import I_O_FST, far_dir # will use later
 
 units_map = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
