@@ -1,9 +1,48 @@
 '''
-Create FSTs for numbers from 0 - 1000 in English
+Create FSTs for numbers from 0 - 1000 in French
 '''
 
 import pynini
-from utils import I_O_FST 
+from utils import I_O_FST, far_dir, apply_fst
+
+units_map = {
+    "0": "zéro", "1": "un", "2": "deux", "3": "trois", "4": "quatre",
+    "5": "cinq", "6": "six", "7": "sept", "8": "huit", "9": "neuf"
+}
+
+
+teens_map = {
+    "10": "dix", "11": "onze", "12": "douze", "13": "treize",
+    "14": "quatorze", "15": "quinze", "16": "seize",
+    "17": "dix-sept", "18": "dix-huit", "19": "dix-neuf"
+}
+
+tens_digit_map = {
+    "2": "vingt",
+    "3": "trente",
+    "4": "quarante",
+    "5": "cinquante",
+    "6": "soixante",
+    "7": "soixante-dix",
+    "8": "quatre-vingt",
+    "9": "quatre-vingt-dix"
+}
+
+hundreds = {
+    "100": "cent",
+    "200": "deux cents",
+    "300": "trois cents",
+    "400": "quatre cents",
+    "500": "cinq cents",
+    "600": "six cents",
+    "700": "sept cents",
+    "800": "huit cents",
+    "900": "neuf cents"
+}
+
+import os
+import pynini
+from utils import I_O_FST, far_dir
 
 units_map = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
@@ -12,7 +51,7 @@ units_map = {
 
 
 teens_map = {
-    "10": "dix", "11": "eleven", "12": "twelve", "13": "thirteen",
+    "10": "ten", "11": "eleven", "12": "twelve", "13": "thirteen",
     "14": "fourteen", "15": "fifteen", "16": "sixteen",
     "17": "seventeen", "18": "eighteen", "19": "nineteen"
 }
@@ -149,8 +188,8 @@ fst_hundreds_ = generate_hundred_units_FSTS()
 
 
 def get_normilizer():
-
-    return pynini.union(
+   
+    fst = pynini.union(
     fst_units,           # Handles "0"-"9"
     fst_teens,           # Handles "10"-"19"
    fst_exact_tens,      # Handles "20", "30", "40"
@@ -161,7 +200,20 @@ def get_normilizer():
     fst_hundreds_compound,
     fst_hundreds_
     
-).optimize()
+    ).optimize()
+    text = '290'
+    result = apply_fst(text, fst=fst)
+    print(result)
+
+    # # save to far file
+    # far_path = os.path.join(far_dir,'en_fst.far')
+    # far = pynini.Far(far_path,'w')
+    # far.add('en_fst', fst)
+
+    # print('done')
+
+if __name__ == "__main__":
+    get_normilizer()
 
 
 
