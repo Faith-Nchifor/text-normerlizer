@@ -3,7 +3,7 @@ Create FSTs for numbers from 0 - 1000 in French
 '''
 import os
 import pynini
-from utils import I_O_FST 
+from utils import I_O_FST, far_dir # will use later
 
 units_map = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
