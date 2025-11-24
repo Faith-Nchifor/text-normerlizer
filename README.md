@@ -10,12 +10,13 @@ Normalizes numbers from 0- 1000 in either English or French
 
 ## Structure of Repo
 
-- `data/   ` contains the FAR archive of normalized numbers from 0-999 for both French and English
+- `data/   ` contains the FAR archive of normalized numbers from 0-1000 for both French and English
 - `scr/` Is the source code of the repo
 - - `generate_en_fst.py` and `generate_fre_fst.py` are used to generate FSTs for English and French 
 - - `utils.py` are utility functions that help the program run
 - - `normalize.py` calls the FSTs to normalize input sentences
 - `requirements.txt` lists the packages required for this project to run
+- `fst_report.pdf` explains my methodology and findings
 
 ### To get Started,
 
