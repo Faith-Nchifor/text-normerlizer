@@ -191,16 +191,7 @@ def get_normilizer():
     fst_hundreds_upper_compounds
     
     ).optimize()
-    # problems: 195, 
-    # text = '5'
-    # result = apply_fst(text, fst=fst)
-    # print(result)
-
-    # save to far file
-    far = pynini.Far(far_path,'w')
-    far.add('fre_fst', fst)
-
-    print('done')
+    return fst
 
 if __name__ == "__main__":
     get_normilizer()

@@ -162,12 +162,12 @@ def get_normilizer():
     fst_hundreds_
     
     ).optimize()
-
+    return fst
     # save to far file
-    far = pynini.Far(far_path,'w')
-    far.add('en_fst', fst)
+    # far = pynini.Far(far_path,'w')
+    # far.add('en_fst', fst)
 
-    print('done')
+    # print('done')
 
 if __name__ == "__main__":
     get_normilizer()

@@ -7,8 +7,9 @@ from utils import apply_fst, far_path
 # retrieve stored fst
 archive = pynini.Far(far_path) 
 
-english_fsts = archive['en_fst']
+english_fsts = archive['eng_fst']
 french_fsts = archive['fre_fst']
+
 
 
 #  Some variables and functions used in generating the normalized text
@@ -49,12 +50,9 @@ def tokenize_pynini(text: str) -> list[str]:
 # it returns values that looks like this: { word { value: "we" } }  { cardinal { integer: "six" } }}. Where different classes have different tags, and only the chooses classes are affected by the normalizer.
 # in our case only the values with tags "cardinal"
 def classify_token( token: str) -> str:
-    print(type(token))
     if token.isdigit():
-        verbalized = apply_fst(token,fsts)
-        # verbalized = pynini.shortestpath(
-            # pynini.accep(token, token_type="utf8") @ rewrite_fst
-        # ).string(token_type="utf8")
+        verbalized = apply_fst(token,english_fsts)
+        
         return f'{{ cardinal {{ integer: "{verbalized}" }} }}'
     else:
         return f'{{ word {{ value: "{token}" }} }}'
@@ -91,12 +89,14 @@ def strip_tags_with_pynutil(tagged_text: str) -> str:
 
 
 def normalize_text( text = "we started with the number 100 and ended up 823."):
-
+    
     normalized_with_tag = classify_sentence(text)
     normalized = strip_tags_with_pynutil(normalized_with_tag)
     print("text before normalization: ",text)
     # print("text normalized - but still taged: ", normalized_with_tag)
     print("text normalized: ", normalized)
+    # print(list(archive))
+    
 
 
 normalize_text()
