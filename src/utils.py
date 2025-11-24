@@ -6,7 +6,7 @@ from pynini.lib import pynutil, utf8
 far_dir = 'data'
 os.makedirs(far_dir,exist_ok=True)
 
-far_path = os.path.join(far_dir,'en_fst.far')
+far_path = os.path.join(far_dir,'fst.far')
 
 # This function creates an FST that transduces a single input string to a single output string.
 

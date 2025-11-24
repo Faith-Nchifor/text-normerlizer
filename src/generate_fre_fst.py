@@ -1,44 +1,51 @@
 '''
-Create FSTs for numbers from 0 - 1000 in English
+Create FSTs for numbers from 0 - 1000 in French
 '''
 import os
 import pynini
-from utils import I_O_FST, far_dir
+from utils import I_O_FST, far_path, apply_fst
 
 units_map = {
-    "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
-    "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine"
+    "0": "zéro", "1": "un", "2": "deux", "3": "trois", "4": "quatre",
+    "5": "cinq", "6": "six", "7": "sept", "8": "huit", "9": "neuf"
 }
 
 
 teens_map = {
-    "10": "ten", "11": "eleven", "12": "twelve", "13": "thirteen",
-    "14": "fourteen", "15": "fifteen", "16": "sixteen",
-    "17": "seventeen", "18": "eighteen", "19": "nineteen"
+    "10": "dix", "11": "onze", "12": "douze", "13": "treize",
+    "14": "quatorze", "15": "quinze", "16": "seize",
+    "17": "dix-sept", "18": "dix-huit", "19": "dix-neuf"
 }
 
 tens_digit_map = {
-    "2": "twenty",
-    "3": "thirty",
-    "4": "forty",
-    "5": "fifty",
-    "6": "sixty",
-    "7": "seventy",
-    "8": "eighty",
-    "9": "ninety"
+    "2": "vingt",
+    "3": "trente",
+    "4": "quarante",
+    "5": "cinquante",
+    "6": "soixante",
+    "7": "soixante-dix",
+    "8": "quatre-vingt",
+    "9": "quatre-vingt-dix"
 }
 
-hundreds = {
-    "100": "one hundred",
-    "200": "two hundred",
-    "300": "three hundred",
-    "400": "four hundred",
-    "500": "five hundred",
-    "600": "six hundred",
-    "700": "seven hundred",
-    "800": "eight hundred",
-    "900": "nine hundred"
+tens_digits_upper_map_odds = {
+    "7": "soixante",
+    "9": "quatre-vingt"
 }
+
+
+hundreds = {
+    "100": "cent",
+    "200": "deux cents",
+    "300": "trois cents",
+    "400": "quatre cents",
+    "500": "cinq cents",
+    "600": "six cents",
+    "700": "sept cents",
+    "800": "huit cents",
+    "900": "neuf cents"
+}
+
 
 # FST to insert a space: outputs " "
 fst_insert_space = I_O_FST("", " ") # <eps> -> " "
@@ -79,10 +86,23 @@ def generate_tens_FSTs():
     fst_exact_tens = (fst_tens_digits + fst_eat_zero).optimize()
     return fst_exact_tens
 
-#  FSTs for 21-29
+#  FSTs for numbers from 70 - 99
+def generate_upper_compounds():
+    compound_teens_map = {k[1]: v for k, v in teens_map.items() if int(k[1])>0 }
+    fst_compound_teens_digit_list = [I_O_FST(num, text) for num, text in compound_teens_map.items()]
+    fst_compound_teens_digits = pynini.union(*fst_compound_teens_digit_list).optimize()
+
+    fst_above_70_list =[I_O_FST(num, text) for num, text in tens_digits_upper_map_odds.items()]
+    fst_above_70 = pynini.union(*fst_above_70_list).optimize()
+
+    fst_compound_tens = (fst_above_70 + fst_insert_space + fst_compound_teens_digits).optimize()
+    return fst_compound_tens
+
+#  FSTs for 21-29..., 59
 def generate_compund_tens_FSTs():
 
-
+    fst_tens_digit_list = [I_O_FST(digit, text) for digit, text in tens_digit_map.items() if (int(digit)!=7) & (int(digit)!=9)]
+    fst_tens_digits = pynini.union(*fst_tens_digit_list).optimize()
     compound_units_map = {k: v for k, v in units_map.items() if k != "0"}
     fst_compound_units_digit_list = [I_O_FST(num, text) for num, text in compound_units_map.items()]
     fst_compound_units_digits = pynini.union(*fst_compound_units_digit_list).optimize()
@@ -99,7 +119,7 @@ def generate_hundred_units_FSTS():
     return fst_h_units_digits
 
 def generate_hundreds():
-    single_hundreds = {k[0]: v for k, v in hundreds.items() }
+    single_hundreds = {k[0]: v[:-1] for k, v in hundreds.items() } # remove the 0s from 100, 200 etc and the 's' behind the 'cents'
     single_hundreds_list = [I_O_FST(num, text) for num, text in single_hundreds.items()]
     fst_hundreds = pynini.union(*single_hundreds_list).optimize()
     return fst_hundreds
@@ -107,7 +127,7 @@ def generate_hundreds():
 #  another fst for hundred +  compound variables:121-199, 221-299, ... 921-999
 def generate_hundreds_compound_FSTs():
     fst_hundreds = generate_hundreds()
-    return (fst_hundreds + fst_insert_space + fst_insert_and + fst_insert_space + fst_compound_tens).optimize()
+    return (fst_hundreds + fst_insert_space  + fst_compound_tens).optimize()
 
 
 
@@ -117,7 +137,7 @@ def generate_fst_hundred_units():
     _hundreds_list = [I_O_FST(num, text) for num, text in _hundreds.items()]
     fst_hundreds = pynini.union(*_hundreds_list).optimize()
     fst_units_minus_zero = pynini.union(*fst_units_list[1:]).optimize()
-    fst_hundred_units = (fst_hundreds + fst_insert_space +  fst_insert_and + fst_insert_space + fst_units_minus_zero ).optimize()
+    fst_hundred_units = (fst_hundreds + fst_insert_space + fst_units_minus_zero ).optimize()
     return fst_hundred_units
 
 
@@ -132,17 +152,24 @@ fst_compound_tens = generate_compund_tens_FSTs()
 # 100,200,...,900
 fst_hundred_units = generate_fst_hundred_units()
 
-# FSTs for 121-199, 221-299, ... 921-999
-fst_hundreds_compound = (fst_hundreds + fst_insert_space + fst_insert_and + fst_insert_space + fst_compound_tens).optimize()
+# FSTs for 121-169, 221-269, ... 921-969
+fst_hundreds_compound = (fst_hundreds + fst_insert_space   + fst_compound_tens).optimize()
 
 # FSTs for teens in hundreds
-fst_hundred_teens = (fst_hundreds + fst_insert_space +  fst_insert_and + fst_insert_space + fst_teens ).optimize()
+fst_hundred_teens = (fst_hundreds + fst_insert_space  + fst_teens ).optimize()
 
 # for 120, 130, 140, 150
-fst_hundred_tens = (fst_hundreds + fst_insert_space +  fst_insert_and + fst_insert_space + fst_exact_tens ).optimize()
+fst_hundred_tens = (fst_hundreds + fst_insert_space  + fst_exact_tens ).optimize()
 
 # for 100,200,...,900
 fst_hundreds_ = generate_hundred_units_FSTS()
+
+# fsts for 71 - 99
+fst_upper_compounds = generate_upper_compounds()
+
+# fsts for 171 - 179, 191- 199, ..., 971-179, 991-999
+fst_hundreds_upper_compounds = (fst_hundreds + fst_insert_space   + fst_upper_compounds).optimize()
+
 
 # combine all FSTS 
 
@@ -159,20 +186,24 @@ def get_normilizer():
     fst_hundred_teens,
     fst_hundred_tens,
     fst_hundreds_compound,
-    fst_hundreds_
+    fst_hundreds_,
+    fst_upper_compounds,
+    fst_hundreds_upper_compounds
     
     ).optimize()
+    # problems: 195, 
+    # text = '5'
+    # result = apply_fst(text, fst=fst)
+    # print(result)
 
     # save to far file
-    far_path = os.path.join(far_dir,'en_fst.far')
     far = pynini.Far(far_path,'w')
-    far.add('en_fst', fst)
+    far.add('fre_fst', fst)
 
     print('done')
 
 if __name__ == "__main__":
     get_normilizer()
-
 
 
 

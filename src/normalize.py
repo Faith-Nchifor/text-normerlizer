@@ -5,11 +5,10 @@ from utils import apply_fst, far_path
 
 
 # retrieve stored fst
-
-
 archive = pynini.Far(far_path) 
 
-fsts = archive['en_fst']
+english_fsts = archive['en_fst']
+french_fsts = archive['fre_fst']
 
 
 #  Some variables and functions used in generating the normalized text
