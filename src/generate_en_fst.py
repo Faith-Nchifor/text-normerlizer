@@ -145,7 +145,7 @@ fst_hundred_tens = (fst_hundreds + fst_insert_space +  fst_insert_and + fst_inse
 fst_hundreds_ = generate_hundred_units_FSTS()
 
 # combine all FSTS 
-
+fst_one_thousand = I_O_FST('1000', 'one thousand')
 
 
 def get_normilizer():
@@ -155,19 +155,16 @@ def get_normilizer():
     fst_teens,           # Handles "10"-"19"
    fst_exact_tens,      # Handles "20", "30", "40"
     fst_compound_tens,   # Handles "21-29", "31-39"
-    fst_hundred_units,
-    fst_hundred_teens,
-    fst_hundred_tens,
-    fst_hundreds_compound,
-    fst_hundreds_
+    fst_hundred_units,   # For 101-109,201-209,...901-909
+    fst_hundred_teens, # for 111-119,..., 911-919
+    fst_hundred_tens,  # for 110, 120, 130,..., 990 
+    fst_hundreds_compound, #Handles "21-29", "31-39"
+    fst_hundreds_, # 100, 200, 900
+    fst_one_thousand # for one thousand
     
     ).optimize()
     return fst
-    # save to far file
-    # far = pynini.Far(far_path,'w')
-    # far.add('en_fst', fst)
-
-    # print('done')
+    
 
 if __name__ == "__main__":
     get_normilizer()

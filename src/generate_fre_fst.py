@@ -3,7 +3,7 @@ Create FSTs for numbers from 0 - 1000 in French
 '''
 import os
 import pynini
-from utils import I_O_FST, far_path, apply_fst
+from utils import I_O_FST
 
 units_map = {
     "0": "zéro", "1": "un", "2": "deux", "3": "trois", "4": "quatre",
@@ -164,12 +164,14 @@ fst_hundred_tens = (fst_hundreds + fst_insert_space  + fst_exact_tens ).optimize
 # for 100,200,...,900
 fst_hundreds_ = generate_hundred_units_FSTS()
 
-# fsts for 71 - 99
+# fsts for 71 - 79 and 91-99
 fst_upper_compounds = generate_upper_compounds()
 
 # fsts for 171 - 179, 191- 199, ..., 971-179, 991-999
 fst_hundreds_upper_compounds = (fst_hundreds + fst_insert_space   + fst_upper_compounds).optimize()
 
+
+fst_one_thousand  =  I_O_FST('1000', 'mille')
 
 # combine all FSTS 
 
@@ -178,17 +180,18 @@ fst_hundreds_upper_compounds = (fst_hundreds + fst_insert_space   + fst_upper_co
 def get_normilizer():
    
     fst = pynini.union(
-    fst_units,           # Handles "0"-"9"
-    fst_teens,           # Handles "10"-"19"
-   fst_exact_tens,      # Handles "20", "30", "40"
-    fst_compound_tens,   # Handles "21-29", "31-39"
-    fst_hundred_units,
-    fst_hundred_teens,
-    fst_hundred_tens,
-    fst_hundreds_compound,
-    fst_hundreds_,
-    fst_upper_compounds,
-    fst_hundreds_upper_compounds
+    fst_units,           #  "0"-"9"
+    fst_teens,           #  "10"-"19"
+    fst_exact_tens,      #  "20", "30", "40"
+    fst_compound_tens,   #  "21,... 59", etc
+    fst_hundred_units,  # For 101-109,...701-709 and 901-909
+    fst_hundred_teens, # for 111 -119, 211 - 219, ..911-919
+    fst_hundred_tens, # for 110,120,130, ... 990
+    fst_hundreds_compound, # for 121-169, 221-269, ... 921-969 and 821-869
+    fst_hundreds_, # for 100,200,...,900
+    fst_upper_compounds, #  for 71-79 and 91 - 99
+    fst_hundreds_upper_compounds, # 171 - 179, 191- 199, ..., 971-179, 991-999
+    fst_one_thousand
     
     ).optimize()
     return fst
