@@ -62,7 +62,6 @@ def generate_teen_FSTs():
 
 
     fst_teens_list = [I_O_FST(x, y) for x, y in teens_map.items()]
-    fst_teens = pynini.union(*fst_teens_list).optimize()
     return pynini.union(*fst_teens_list).optimize()
 
 
