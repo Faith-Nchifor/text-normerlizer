@@ -1,6 +1,7 @@
 '''
 This file lets you normalize the numbers in text in either English or French
 '''
+import time
 import argparse
 import pynini
 from pynini.lib import pynutil, utf8
@@ -114,6 +115,9 @@ if __name__ == '__main__':
     text = args.text or "we started with the number 100 and ended up 823."
     lang = args.lang or 'eng'
 
+    start = time.time()
     normalize_text(text, lang)
+    end = time.time() 
+    print('runtime:', end - start, 'seconds')
 
 
