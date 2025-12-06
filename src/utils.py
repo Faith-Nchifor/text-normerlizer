@@ -1,5 +1,6 @@
 '''
-Some utility functions to create and apply FSTs 
+Some utility functions to create and apply FSTs.
+NB:  These methods were copied from the sample notebook demonstrating how FSTs work (https://colab.research.google.com/#scrollTo=I34ODvIYhJw9&fileId=https%3A//huggingface.co/datasets/DigitalUmuganda/Text_Normalization_Challenge_Unittests_Eng_Fra/blob/main/tutorial_FST_text_normalization.ipynb)
 '''
 import os
 import pynini
