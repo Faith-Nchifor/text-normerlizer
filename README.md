@@ -32,7 +32,7 @@ Normalizes numbers from 0- 1000 in either English or French
 
 
 ### To compile a new FST file
-(This is already found in /data/fst.far)
+(This is already compiled and is in /data/fst.far)
 
 - run `python src/main.py`
 
